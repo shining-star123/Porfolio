@@ -3,7 +3,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, User, Mail, FileText, MessageSquare} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { contactService, ContactMessageInsert } from "@/services/contactService";
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -23,61 +22,6 @@ const ContactForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-    
-    try {
-      const messageData: ContactMessageInsert = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        subject: formData.subject.trim(),
-        message: formData.message.trim(),
-        user_id: null
-      };
-      
-      const result = await contactService.insertMessage(messageData);
-      
-      if (result.error) {
-        throw new Error(result.error.message || "Failed to send message");
-      }
-      
-      setIsSubmitted(true);
-      
-      toast({
-        title: "Message sent successfully!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
-        variant: "default",
-      });
-      
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-      
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 3000);
-      
-    } catch (error: any) {
-      toast({
-        title: "Failed to send message",
-        description: error.message || "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   return (
